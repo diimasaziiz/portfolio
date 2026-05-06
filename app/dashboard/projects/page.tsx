@@ -113,7 +113,7 @@ export default function Page() {
       header: 'Content',
       cell: ({ row }) => (
         <div className="line-clamp-6 w-160 whitespace-normal">
-          <BaseHtmlRenderer>{row.original.content}</BaseHtmlRenderer>
+          <p>{row.original.content}</p>
         </div>
       ),
     },

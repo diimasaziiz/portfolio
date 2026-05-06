@@ -27,7 +27,7 @@ import {
 import { Input } from '@/components/ui/input'
 import { Profile } from '@/types'
 
-import BaseEditor from '../base/base-editor'
+import BaseMDEditor from '../base/base-md-editor'
 
 export const formSchema = z.object({
   full_name: z.string().min(1, 'Full Name is required'),
@@ -181,7 +181,7 @@ export default function FormProfile({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Bio</FieldLabel>
-                  <BaseEditor model={field.value || ''} onChange={field.onChange} />
+                  <BaseMDEditor {...field} />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -193,7 +193,7 @@ export default function FormProfile({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Full Bio</FieldLabel>
-                  <BaseEditor model={field.value || ''} onChange={field.onChange} />
+                  <BaseMDEditor height={500} {...field} />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

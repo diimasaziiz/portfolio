@@ -68,7 +68,7 @@ export function FormTechnology({ open, isLoading, onOpenChange, onSubmit, defaul
           <DialogTitle>{defaultValues?.id ? 'Edit Technology' : 'Create Technology'}</DialogTitle>
         </DialogHeader>
 
-        <form id="form-techbology" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
+        <form id="form-technology" onSubmit={form.handleSubmit(handleSubmit)} className="space-y-4">
           <FieldGroup>
             <Controller
               name="name"
@@ -100,7 +100,7 @@ export function FormTechnology({ open, isLoading, onOpenChange, onSubmit, defaul
           <Button type="button" variant="outline" onClick={() => onOpenChange(false)}>
             Cancel
           </Button>
-          <Button form="form-techbology" type="submit" loading={isLoading}>
+          <Button form="form-technology" type="submit" loading={isLoading}>
             Save
           </Button>
         </DialogFooter>

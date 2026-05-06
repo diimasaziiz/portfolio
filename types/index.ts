@@ -33,13 +33,13 @@ export interface Project {
   created_at: string
 }
 
-export interface WorkExperience {
+export interface Experience {
   id: string
   company_name: string
   position: string
   location: string
-  start_date: string
-  end_date: string
+  start_date: Date
+  end_date?: Date
   is_current: boolean
   description: string
   company_logo_url: string

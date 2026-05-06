@@ -1,12 +1,12 @@
 'use client'
 
+import MDEditor from '@uiw/react-md-editor'
 import { SquarePen } from 'lucide-react'
 import { useState } from 'react'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import z from 'zod'
 
-import BaseHtmlRenderer from '@/components/base/base-hmtl-renderer'
 import FormProfile, { formSchema } from '@/components/form/form-profile'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -157,7 +157,10 @@ export default function Page() {
               Bio
             </h3>
             <div className="prose prose-sm dark:prose-invert max-w-none">
-              <BaseHtmlRenderer>{profile.bio}</BaseHtmlRenderer>
+              <MDEditor.Markdown
+                source={profile.bio}
+                style={{ backgroundColor: 'transparent', whiteSpace: 'pre-wrap' }}
+              />
             </div>
           </section>
         )}
@@ -169,7 +172,10 @@ export default function Page() {
               Full Bio
             </h3>
             <div className="prose prose-sm dark:prose-invert max-w-none">
-              <BaseHtmlRenderer>{profile.full_bio}</BaseHtmlRenderer>
+              <MDEditor.Markdown
+                source={profile.full_bio}
+                style={{ backgroundColor: 'transparent', whiteSpace: 'pre-wrap' }}
+              />
             </div>
           </section>
         )}

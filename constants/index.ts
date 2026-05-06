@@ -1,4 +1,4 @@
-import { FolderRoot, House, Settings, User } from 'lucide-react'
+import { ActivityIcon, FolderRoot, House, Settings, User } from 'lucide-react'
 
 export const MENU = [
   {
@@ -18,6 +18,11 @@ export const MENU = [
         title: 'Profile',
         icon: User,
         href: '/dashboard/profile',
+      },
+      {
+        title: 'Experience',
+        icon: ActivityIcon,
+        href: '/dashboard/experiences',
       },
       {
         title: 'Projects',
