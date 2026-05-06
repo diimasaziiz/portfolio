@@ -127,6 +127,10 @@
     @apply font-sans;
   }
 
+  ol, ul, menu {
+    list-style: unset;
+  }
+
   button:not(:disabled),
   [role='button']:not(:disabled) {
     cursor: pointer;
