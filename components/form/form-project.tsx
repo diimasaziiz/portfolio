@@ -17,7 +17,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from '@/components/ui/field
 import { Input } from '@/components/ui/input'
 import { Project } from '@/types'
 
-import BaseEditor from '../base/base-editor'
+import BaseMDEditor from '../base/base-md-editor'
 import { Textarea } from '../ui/textarea'
 
 export const formSchema = z.object({
@@ -142,7 +142,7 @@ export default function FormProject({
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Content</FieldLabel>
-                  <BaseEditor model={field.value || ''} onChange={field.onChange} />
+                  <BaseMDEditor height={800} {...field} />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
