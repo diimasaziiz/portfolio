@@ -10,6 +10,7 @@ interface Props {
   profileData: Profile
   technologies: Technology[]
 }
+
 function Hero({ profileData, technologies }: Props) {
   return (
     <div className="flex min-h-screen flex-col justify-around pt-20 md:pt-40">
@@ -24,7 +25,7 @@ function Hero({ profileData, technologies }: Props) {
               {profileData?.bio}
             </p>
             <div className="flex flex-wrap gap-4">
-              <Button size="lg">
+              <Button size="lg" aria-label="See my work and projects">
                 See my work <ArrowRight className="ml-2 h-4 w-4" />
               </Button>
             </div>

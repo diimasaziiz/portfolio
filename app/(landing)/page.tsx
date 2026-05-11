@@ -1,8 +1,24 @@
+import { Metadata } from 'next'
+
+import { StructuredDataComponent } from '@/components/base/base-structured-data'
 import FeaturedProject from '@/components/layout/featured-project'
 import Hero from '@/components/layout/hero'
+import { DEFAULT_SEO_CONFIG, generateMetadata } from '@/lib/seo'
 import { createClient } from '@/lib/supabase/client'
 
 const USER_ID = process.env.NEXT_PUBLIC_USER_ID
+
+export const metadata: Metadata = generateMetadata({
+  title: 'Home',
+  description: DEFAULT_SEO_CONFIG.description,
+  openGraph: {
+    title: DEFAULT_SEO_CONFIG.siteName,
+    description: DEFAULT_SEO_CONFIG.description,
+    type: 'website',
+    url: DEFAULT_SEO_CONFIG.siteUrl,
+  },
+})
+
 export default async function Page() {
   const supabase = createClient()
 
@@ -22,6 +38,7 @@ export default async function Page() {
 
   return (
     <>
+      <StructuredDataComponent profile={profileData} />
       <Hero profileData={profileData} technologies={technologies} />
       <FeaturedProject projects={projects} />
     </>
