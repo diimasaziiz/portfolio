@@ -127,7 +127,9 @@
     @apply font-sans;
   }
 
-  ol, ul, menu {
+  ol,
+  ul,
+  menu {
     list-style: unset;
   }
 
@@ -138,23 +140,35 @@
 }
 
 @layer components {
-  .ck-editor__editable {
-    min-height: 20rem;
+  .animate-marquee {
+    animation: marquee var(--duration) infinite linear;
+  }
+  .animate-marquee-vertical {
+    animation: marquee-vertical var(--duration) linear infinite;
   }
 
-  .text-tiny {
-    font-size: 0.7em;
+  @keyframes marquee {
+    from {
+      transform: translateX(0);
+    }
+    to {
+      transform: translateX(calc(-100% - var(--gap)));
+    }
   }
+  @keyframes marquee-vertical {
+    from {
+      transform: translateY(0);
+    }
+    to {
+      transform: translateY(calc(-100% - var(--gap)));
+    }
+  }
+}
 
-  .text-small {
-    font-size: 0.85em;
-  }
-
-  .text-big {
-    font-size: 1.4em;
-  }
-
-  .text-huge {
-    font-size: 1.8em;
-  }
+/* globals.css or your stylesheet */
+.wmde-markdown ul,
+.wmde-markdown ol {
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
 }

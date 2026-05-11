@@ -3,17 +3,17 @@
 import { ColumnDef } from '@tanstack/react-table'
 import { SquarePen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
+import { omit } from 'remeda'
 import { toast } from 'sonner'
 import useSWR from 'swr'
 import z from 'zod'
 
-import BaseHtmlRenderer from '@/components/base/base-hmtl-renderer'
 import { BaseTable } from '@/components/base/base-table'
 import FormProject, { formSchema } from '@/components/form/form-project'
 import { Button } from '@/components/ui/button'
 import { Switch } from '@/components/ui/switch'
 import { createClient } from '@/lib/supabase/client'
-import { Project } from '@/types'
+import { Project, Technology } from '@/types'
 
 export default function Page() {
   const supabase = createClient()
@@ -24,11 +24,42 @@ export default function Page() {
   /**
    * SWR FETCHER
    */
-  const fetcher = async () => {
-    const { data, error } = await supabase.from('projects').select('*').overrideTypes<Project[]>()
+
+  const fetcherTech = async () => {
+    const { data, error } = await supabase
+      .from('technologies')
+      .select('*')
+      .overrideTypes<Technology[]>()
 
     if (error) throw error
     return data ?? []
+  }
+
+  const { data: technologies = [] } = useSWR('technologies', fetcherTech)
+
+  const technologyOpts = technologies.map((tech) => ({ label: tech.name, value: tech.id }))
+
+  const fetcher = async () => {
+    const { data, error } = await supabase
+      .from('projects')
+      .select('*')
+      .select('*, project_technologies(tech_id, technologies(name))')
+      .overrideTypes<Project[]>()
+
+    if (error) throw error
+    if (!data) return []
+
+    // 2. Transformasi data: ubah array of object menjadi array of string
+    const transformedData = data.map((project) => ({
+      ...project,
+      // Ubah [{tech_id: 'a'}, {tech_id: 'b'}] menjadi ['a', 'b']
+      tech_stack: project.project_technologies.map((pt) => ({
+        label: pt.technologies.name,
+        value: pt.tech_id,
+      })),
+    }))
+
+    return transformedData as Project[]
   }
 
   const { data = [], mutate, isLoading } = useSWR('projects', fetcher)
@@ -42,24 +73,55 @@ export default function Page() {
   }
 
   const handleEdit = (tech: Project) => {
+    console.log(tech)
     setSelected(tech)
     setIsOpen(true)
   }
 
   const handleSubmit = async (formData: z.infer<typeof formSchema>) => {
+    const selectedTechIds = formData.tech_stack?.map((tech) => tech.value)
+
+    let currentProjectId = selected?.id
     try {
-      if (selected?.id) {
-        const { error } = await supabase.from('projects').update(formData).eq('id', selected.id)
+      if (currentProjectId) {
+        const { error } = await supabase
+          .from('projects')
+          .update(omit(formData, ['tech_stack']))
+          .eq('id', currentProjectId)
 
         if (error) throw error
-        toast.success('Updated successfully')
+
+        // Hapus semua relasi teknologi lama terlebih dahulu
+        const { error: delErr } = await supabase
+          .from('project_technologies')
+          .delete()
+          .eq('project_id', currentProjectId)
+        if (delErr) throw delErr
       } else {
-        const { error } = await supabase.from('projects').insert([formData])
+        const { data: newProject, error } = await supabase
+          .from('projects')
+          .insert([omit(formData, ['tech_stack'])])
+          .select()
+          .single()
 
         if (error) throw error
-        toast.success('Created successfully')
+        currentProjectId = newProject?.id
       }
 
+      // --- INSERT RELASI TEKNOLOGI BARU (Untuk Create & Update) ---
+      if (selectedTechIds && selectedTechIds.length > 0 && currentProjectId) {
+        // Bentuk array of object sesuai struktur tabel penghubung
+        const pivotData = selectedTechIds?.map((techId) => ({
+          project_id: currentProjectId,
+          tech_id: techId,
+        }))
+
+        const { error: pivotErr } = await supabase.from('project_technologies').insert(pivotData)
+
+        if (pivotErr) throw pivotErr
+      }
+
+      toast.success(selected?.id ? 'Project updated!' : 'Project created!')
       setIsOpen(false)
       await mutate() // ✅ refresh data
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -84,7 +146,7 @@ export default function Page() {
   const handleFeaturedChange = async (isFeatured: boolean, payload: Project): Promise<void> => {
     const { error } = await supabase
       .from('projects')
-      .update({ ...payload, is_featured: isFeatured })
+      .update({ ...omit(payload, ['project_technologies', 'tech_stack']), is_featured: isFeatured })
       .eq('id', payload.id)
 
     if (error) {
@@ -106,15 +168,6 @@ export default function Page() {
       header: 'Short Description',
       cell: ({ row }) => (
         <div className="line-clamp-6 w-[20rem] whitespace-normal">{row.original.description}</div>
-      ),
-    },
-    {
-      accessorKey: 'content',
-      header: 'Content',
-      cell: ({ row }) => (
-        <div className="line-clamp-6 w-160 whitespace-normal">
-          <p>{row.original.content}</p>
-        </div>
       ),
     },
     {
@@ -142,6 +195,19 @@ export default function Page() {
         <a href={row.original.github_url} target="_blank">
           Open Link
         </a>
+      ),
+    },
+    {
+      accessorKey: 'tech_stack',
+      header: 'Tech Stack',
+      cell: ({ row }) => (
+        <ul>
+          {row.original.tech_stack.map((tech) => (
+            <li key={tech.value} className="mr-2">
+              {tech.label}
+            </li>
+          ))}
+        </ul>
       ),
     },
     {
@@ -191,6 +257,7 @@ export default function Page() {
       <FormProject
         key={selected?.id || 'new'}
         open={isOpen}
+        technologyOpts={technologyOpts}
         onOpenChange={setIsOpen}
         onSubmit={handleSubmit}
         defaultValues={selected}

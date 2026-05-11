@@ -115,7 +115,11 @@ export default function Page() {
         <div className="w-160">
           <MDEditor.Markdown
             source={row.original.description}
-            style={{ backgroundColor: 'transparent', whiteSpace: 'pre-wrap' }}
+            style={{
+              backgroundColor: 'transparent',
+              whiteSpace: 'pre-wrap',
+              fontFamily: 'inherit',
+            }}
           />
         </div>
       ),
