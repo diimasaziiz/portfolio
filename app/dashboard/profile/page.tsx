@@ -159,7 +159,11 @@ export default function Page() {
             <div className="prose prose-sm dark:prose-invert max-w-none">
               <MDEditor.Markdown
                 source={profile.bio}
-                style={{ backgroundColor: 'transparent', whiteSpace: 'pre-wrap' }}
+                style={{
+                  backgroundColor: 'transparent',
+                  whiteSpace: 'pre-wrap',
+                  fontFamily: 'inherit',
+                }}
               />
             </div>
           </section>
@@ -174,7 +178,11 @@ export default function Page() {
             <div className="prose prose-sm dark:prose-invert max-w-none">
               <MDEditor.Markdown
                 source={profile.full_bio}
-                style={{ backgroundColor: 'transparent', whiteSpace: 'pre-wrap' }}
+                style={{
+                  backgroundColor: 'transparent',
+                  whiteSpace: 'pre-wrap',
+                  fontFamily: 'inherit',
+                }}
               />
             </div>
           </section>

@@ -1,6 +1,9 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
+import { format } from 'date-fns'
+import { CalendarIcon } from 'lucide-react'
+import React from 'react'
 import { useEffect } from 'react'
 import { Controller, useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -18,6 +21,20 @@ import { Input } from '@/components/ui/input'
 import { Project } from '@/types'
 
 import BaseMDEditor from '../base/base-md-editor'
+import { Calendar } from '../ui/calendar'
+import {
+  Combobox,
+  ComboboxChip,
+  ComboboxChips,
+  ComboboxChipsInput,
+  ComboboxContent,
+  ComboboxEmpty,
+  ComboboxItem,
+  ComboboxList,
+  ComboboxValue,
+  useComboboxAnchor,
+} from '../ui/combobox'
+import { Popover, PopoverContent, PopoverTrigger } from '../ui/popover'
 import { Textarea } from '../ui/textarea'
 
 export const formSchema = z.object({
@@ -27,6 +44,8 @@ export const formSchema = z.object({
   image_url: z.url('Image Url is required'),
   demo_url: z.url().optional(),
   github_url: z.url('Github Url is required'),
+  tech_stack: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
+  date_published: z.date('Date Published is required'),
   is_featured: z.boolean(),
 })
 
@@ -39,6 +58,7 @@ type Props = {
   isLoading: boolean
   onOpenChange: (open: boolean) => void
   onSubmit: (data: z.infer<typeof formSchema>) => void
+  technologyOpts: { label: string; value: string }[]
   defaultValues?: Project | null
 }
 
@@ -49,6 +69,7 @@ const DEFAULT_VALUES = {
   image_url: '',
   demo_url: '',
   github_url: '',
+  tech_stack: [],
   is_featured: false,
 }
 
@@ -58,10 +79,12 @@ export default function FormProject({
   onOpenChange,
   onSubmit,
   defaultValues,
+  technologyOpts,
 }: Props) {
   /**
    * SETUP HOOKS
    */
+  const anchor = useComboboxAnchor()
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -131,6 +154,80 @@ export default function FormProject({
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Short Description</FieldLabel>
                   <Textarea {...field} placeholder="Please input short description..." />
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="tech_stack"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Tech Stack</FieldLabel>
+                  <Combobox
+                    multiple
+                    items={technologyOpts}
+                    itemToStringValue={(opt) => opt.label}
+                    value={field.value ?? []}
+                    onValueChange={field.onChange}
+                  >
+                    <ComboboxChips ref={anchor} className="w-full max-w-xs">
+                      <ComboboxValue>
+                        {(values) => (
+                          <React.Fragment>
+                            {values.map((value: { label: string; value: string }) => (
+                              <ComboboxChip key={value.value}>{value.label}</ComboboxChip>
+                            ))}
+                            <ComboboxChipsInput />
+                          </React.Fragment>
+                        )}
+                      </ComboboxValue>
+                    </ComboboxChips>
+                    <ComboboxContent anchor={anchor}>
+                      <ComboboxEmpty>No items found.</ComboboxEmpty>
+                      <ComboboxList>
+                        {(item) => (
+                          <ComboboxItem key={item.value} value={item}>
+                            {item.label}
+                          </ComboboxItem>
+                        )}
+                      </ComboboxList>
+                    </ComboboxContent>
+                  </Combobox>
+                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
+                </Field>
+              )}
+            />
+
+            <Controller
+              name="date_published"
+              control={form.control}
+              render={({ field, fieldState }) => (
+                <Field data-invalid={fieldState.invalid}>
+                  <FieldLabel>Date Published</FieldLabel>
+                  <Popover>
+                    <PopoverTrigger
+                      render={
+                        <Button
+                          variant="outline"
+                          data-empty={!field.value}
+                          className="justify-start text-left font-normal data-[empty=true]:text-muted-foreground"
+                        />
+                      }
+                    >
+                      <CalendarIcon />
+                      {field.value ? format(field.value, 'PPP') : <span>Pick a date</span>}
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0">
+                      <Calendar
+                        mode="single"
+                        captionLayout="dropdown"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                      />
+                    </PopoverContent>
+                  </Popover>
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

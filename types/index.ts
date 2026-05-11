@@ -30,6 +30,9 @@ export interface Project {
   demo_url: string
   github_url: string
   is_featured: boolean
+  project_technologies: { tech_id: string; technologies: { name: string } }[]
+  tech_stack: { label: string; value: string }[]
+  date_published: Date
   created_at: string
 }
 
@@ -43,5 +46,6 @@ export interface Experience {
   is_current: boolean
   description: string
   company_logo_url: string
+  company_url: string
   created_at: string
 }
