@@ -1,6 +1,3 @@
-import { ArrowRight } from 'lucide-react'
-
-import { Button } from '@/components/ui/button'
 import Socmed from '@/components/ui/socmed'
 import { Profile, Technology } from '@/types'
 
@@ -24,11 +21,6 @@ function Hero({ profileData, technologies }: Props) {
             <p className="mb-8 text-lg leading-relaxed text-zinc-400 sm:text-xl">
               {profileData?.bio}
             </p>
-            <div className="flex flex-wrap gap-4">
-              <Button size="lg" aria-label="See my work and projects">
-                See my work <ArrowRight className="ml-2 h-4 w-4" />
-              </Button>
-            </div>
             <Socmed socialMedias={profileData?.social_links} />
           </div>
         </div>

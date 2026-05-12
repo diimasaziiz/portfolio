@@ -1,5 +1,8 @@
+'use client'
+
 import { Button as ButtonPrimitive } from '@base-ui/react/button'
 import { cva, type VariantProps } from 'class-variance-authority'
+import { motion } from 'motion/react'
 
 import { cn } from '@/lib/utils'
 
@@ -53,15 +56,21 @@ function Button({
 }: ButtonPrimitive.Props & VariantProps<typeof buttonVariants> & { loading?: boolean }) {
   const isDisabled = loading || disabled
   return (
-    <ButtonPrimitive
-      data-slot="button"
-      className={cn(buttonVariants({ variant, size, className }))}
-      disabled={isDisabled}
-      {...props}
+    <motion.div
+      whileHover={{ scale: 1.05 }}
+      whileTap={{ scale: 0.95 }}
+      transition={{ type: 'spring', stiffness: 400, damping: 10 }}
     >
-      {loading && <Spinner data-icon="inline-start" />}
-      {children}
-    </ButtonPrimitive>
+      <ButtonPrimitive
+        data-slot="button"
+        className={cn(buttonVariants({ variant, size, className }))}
+        disabled={isDisabled}
+        {...props}
+      >
+        {loading && <Spinner data-icon="inline-start" />}
+        {children}
+      </ButtonPrimitive>
+    </motion.div>
   )
 }
 
