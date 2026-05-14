@@ -1,4 +1,7 @@
+'use client'
+
 import { ArrowRight } from 'lucide-react'
+import { motion } from 'motion/react'
 import Link from 'next/link'
 
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
@@ -19,9 +22,16 @@ export default function FeaturedProject({ projects = [] }: { projects: Project[]
       </div>
       <div className="mt-12 flex justify-center">
         <Link href="/projects">
-          <Button variant="default" size={'lg'}>
-            See more <ArrowRight className="ml-2 h-4 w-4" />
-          </Button>
+          <motion.div
+            className="h-fit w-fit"
+            whileHover={{ scale: 1.05 }}
+            whileTap={{ scale: 0.95 }}
+            transition={{ type: 'spring', stiffness: 400, damping: 10 }}
+          >
+            <Button variant="default" size={'lg'}>
+              See more <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          </motion.div>
         </Link>
       </div>
     </section>
