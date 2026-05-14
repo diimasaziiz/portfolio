@@ -79,17 +79,39 @@ export default function Preloader({ onComplete }: { onComplete?: () => void }) {
             </div>
 
             {step >= 1 && (
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-                <span className="mr-3 text-purple-500">{'>'}</span>
-                Booting up portfolio...
-              </motion.div>
+              <div className="flex items-center">
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+                  <span className="mr-3 text-purple-500">{'>'}</span>
+                  Booting up portfolio...
+                </motion.div>
+
+                {/* Blinking Cursor */}
+                {step === 1 && (
+                  <motion.div
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                    className="ml-2 h-5 w-2 bg-[#050510] md:h-6 md:w-3 dark:bg-[#f3f1f8]"
+                  />
+                )}
+              </div>
             )}
 
             {step >= 2 && (
-              <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
-                <span className="mr-3 text-purple-500">{'>'}</span>
-                I&apos;m Dimas, a Web Developer.
-              </motion.div>
+              <div className="flex items-center">
+                <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }}>
+                  <span className="mr-3 text-purple-500">{'>'}</span>
+                  I&apos;m Dimas, a Web Developer.
+                </motion.div>
+
+                {/* Blinking Cursor */}
+                {step === 2 && (
+                  <motion.div
+                    animate={{ opacity: [1, 0, 1] }}
+                    transition={{ duration: 0.8, repeat: Infinity, ease: 'linear' }}
+                    className="ml-2 h-5 w-2 bg-[#050510] md:h-6 md:w-3 dark:bg-[#f3f1f8]"
+                  />
+                )}
+              </div>
             )}
 
             {/* FIX: Bungkus pake step >= 3 biar ga nongol duluan */}

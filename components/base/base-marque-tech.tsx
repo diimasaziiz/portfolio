@@ -1,17 +1,23 @@
 /* eslint-disable @next/next/no-img-element */
+'use client'
+
+import { motion } from 'motion/react'
+
 import { Marquee } from '@/components/ui/marquee'
 import { cn } from '@/lib/utils'
 import { Technology } from '@/types'
 
 const ReviewCard = ({ icon_url, name }: Technology) => {
   return (
-    <div
+    <motion.div
+      whileHover={{ y: -4 }}
+      transition={{ type: 'spring', stiffness: 250, damping: 20, delay: 0.1 }}
       className={cn(
-        'relative flex h-full w-48 cursor-pointer overflow-hidden rounded-xl border p-4',
+        'relative flex h-full w-48 cursor-pointer overflow-hidden rounded-xl border bg-white/10 p-4 backdrop-blur-md transition-colors duration-300 hover:shadow-[0_8_24px_var(--primary)]',
         // light styles
-        'border-gray-950/10 bg-gray-950/1 hover:bg-gray-950/5',
+        'border-gray-950/10 bg-gray-950/1 hover:border-primary hover:shadow-primary',
         // dark styles
-        'dark:border-gray-50/10 dark:bg-gray-50/10 dark:hover:bg-gray-50/15',
+        'dark:border-gray-50/10 dark:bg-gray-50/10 dark:hover:border-primary dark:hover:shadow-primary',
       )}
     >
       <div className="flex flex-1 flex-row items-center gap-2">
@@ -20,7 +26,7 @@ const ReviewCard = ({ icon_url, name }: Technology) => {
           <figcaption className="text-sm font-medium dark:text-white">{name}</figcaption>
         </figure>
       </div>
-    </div>
+    </motion.div>
   )
 }
 
