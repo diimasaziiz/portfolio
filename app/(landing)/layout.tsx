@@ -4,6 +4,7 @@ import Lenis from 'lenis'
 import { Fragment_Mono } from 'next/font/google'
 import { useEffect, useState } from 'react'
 
+import Footer from '@/components/layout/footer'
 import Navbar from '@/components/layout/navbar'
 import Preloader from '@/components/pre-loader'
 import Wrapper from '@/components/wrapper'
@@ -53,6 +54,7 @@ export default function LandingLayout({ children }: { children: React.ReactNode 
       <Wrapper>
         <Navbar />
         {children}
+        <Footer />
       </Wrapper>
     </main>
   )
