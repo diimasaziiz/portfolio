@@ -4,9 +4,11 @@ import { StructuredDataComponent } from '@/components/base/base-structured-data'
 import FeaturedProject from '@/components/layout/featured-project'
 import Hero from '@/components/layout/hero'
 import { DEFAULT_SEO_CONFIG, generateMetadata } from '@/lib/seo'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 
 const USER_ID = process.env.NEXT_PUBLIC_USER_ID
+
+export const revalidate = 60
 
 export const metadata: Metadata = generateMetadata({
   title: 'Home',
@@ -20,7 +22,7 @@ export const metadata: Metadata = generateMetadata({
 })
 
 export default async function Page() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: profileData, error } = await supabase
     .from('profiles')
