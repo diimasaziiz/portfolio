@@ -42,8 +42,6 @@ export const formSchema = z.object({
   description: z.string().min(1, 'Short Description is required'),
   content: z.string().min(1, 'Content is required'),
   image_url: z.url('Image Url is required'),
-  demo_url: z.url().optional(),
-  github_url: z.url('Github Url is required'),
   tech_stack: z.array(z.object({ label: z.string(), value: z.string() })).optional(),
   date_published: z.date('Date Published is required'),
   is_featured: z.boolean(),
@@ -67,8 +65,6 @@ const DEFAULT_VALUES = {
   description: '',
   content: '',
   image_url: '',
-  demo_url: '',
-  github_url: '',
   tech_stack: [],
   is_featured: false,
 }
@@ -113,7 +109,11 @@ export default function FormProject({
    * SETUP EFFECTS
    */
   useEffect(() => {
-    const values = open ? (defaultValues ?? DEFAULT_VALUES) : DEFAULT_VALUES
+    const values = open
+      ? defaultValues
+        ? { ...defaultValues, date_published: new Date(defaultValues.date_published) }
+        : DEFAULT_VALUES
+      : DEFAULT_VALUES
 
     form.reset(values)
 
@@ -252,30 +252,6 @@ export default function FormProject({
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel>Image Url</FieldLabel>
                   <Textarea {...field} placeholder="Please input image url..." />
-                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="demo_url"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Demo Url</FieldLabel>
-                  <Textarea {...field} placeholder="Please input demo url..." />
-                  {fieldState.error && <FieldError errors={[fieldState.error]} />}
-                </Field>
-              )}
-            />
-
-            <Controller
-              name="github_url"
-              control={form.control}
-              render={({ field, fieldState }) => (
-                <Field data-invalid={fieldState.invalid}>
-                  <FieldLabel>Github Url</FieldLabel>
-                  <Textarea {...field} placeholder="Please input github url..." />
                   {fieldState.error && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

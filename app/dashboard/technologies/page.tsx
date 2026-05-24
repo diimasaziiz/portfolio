@@ -98,7 +98,7 @@ export default function Page() {
     { accessorKey: 'name', header: 'Name' },
     {
       accessorKey: 'icon_url',
-      header: 'Icon URL',
+      header: 'Icon',
       cell: ({ row }) => {
         const iconUrl = row.getValue<string>('icon_url')
 
