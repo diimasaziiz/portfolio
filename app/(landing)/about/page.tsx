@@ -1,17 +1,19 @@
 import AboutHero from '@/components/layout/about-hero'
 import Experiences from '@/components/layout/experience'
-import { createClient } from '@/lib/supabase/client'
-import { Experience, Profile } from '@/types'
+import { createClient } from '@/lib/supabase/server'
+import { Experience } from '@/types'
 
 /**
  * SETUP LOCAL INTERFACE
  */
 const USER_ID = process.env.NEXT_PUBLIC_USER_ID
+export const revalidate = 60
+
 export default async function Page() {
   /**
    * SETUP HOOKS
    */
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data: profileData } = await supabase
     .from('profiles')

@@ -1,12 +1,14 @@
 import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
-import { createClient } from '@/lib/supabase/client'
+import { createClient } from '@/lib/supabase/server'
 import type { Project } from '@/types'
+
+export const revalidate = 60
 
 export default async function Page() {
   /**
    * SETUP HOOKS
    */
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const { data = [], error } = await supabase.from('projects').select('*')
 
