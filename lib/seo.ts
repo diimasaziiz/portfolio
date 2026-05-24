@@ -3,11 +3,16 @@ import { Metadata } from 'next'
 import OGImage from '@/public/og-image.png'
 
 export const DEFAULT_SEO_CONFIG = {
-  siteName: 'Portfolio',
+  siteName: 'Dimas Abdul Aziz - Portfolio',
   siteUrl: 'https://diimasaziiz.bersuadiantara.com',
   description:
     'Software Engineer based in Indonesia 🇮🇩. Focused on building impactful, user-centered applications—crafting seamless interfaces backed by solid and scalable systems.',
   keywords: [
+    'Dimas Abdul Aziz',
+    'diimasaziiz',
+    'Dimas Aziz',
+    'Dimas Abdul Aziz portfolio',
+    'Dimas Abdul Aziz software engineer',
     'software engineer',
     'frontend developer',
     'React developer',
