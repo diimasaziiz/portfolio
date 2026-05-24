@@ -2,6 +2,7 @@ export interface Technology {
   id: string
   name: string
   icon_url: string
+  created_at: string
 }
 
 export interface Profile {
@@ -27,8 +28,6 @@ export interface Project {
   description: string
   content: string
   image_url: string
-  demo_url: string
-  github_url: string
   is_featured: boolean
   project_technologies: { tech_id: string; technologies: { name: string } }[]
   tech_stack: { label: string; value: string }[]

@@ -2,7 +2,6 @@
 'use client'
 
 import { ColumnDef } from '@tanstack/react-table'
-import MDEditor from '@uiw/react-md-editor'
 import { format } from 'date-fns'
 import { SquarePen, Trash2 } from 'lucide-react'
 import { useState } from 'react'
@@ -109,22 +108,6 @@ export default function Page() {
     },
     { accessorKey: 'location', header: 'Location' },
     {
-      accessorKey: 'description',
-      header: 'Description',
-      cell: ({ row }) => (
-        <div className="w-160">
-          <MDEditor.Markdown
-            source={row.original.description}
-            style={{
-              backgroundColor: 'transparent',
-              whiteSpace: 'pre-wrap',
-              fontFamily: 'inherit',
-            }}
-          />
-        </div>
-      ),
-    },
-    {
       accessorKey: 'start_date',
       header: 'Start Date',
       cell: ({ row }) => <p>{format(row.original.start_date, 'dd MMMM yyyy')}</p>,
@@ -133,7 +116,7 @@ export default function Page() {
       accessorKey: 'end_date',
       header: 'End Date',
       cell: ({ row }) => (
-        <p>{row.original.end_date ? format(row.original.end_date, 'dd MMMM yyyy') : '-'}</p>
+        <p>{row.original.end_date ? format(row.original.end_date, 'dd MMMM yyyy') : 'Present'}</p>
       ),
     },
     {

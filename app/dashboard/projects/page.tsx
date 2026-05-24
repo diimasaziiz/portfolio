@@ -180,29 +180,11 @@ export default function Page() {
       ),
     },
     {
-      accessorKey: 'demo_url',
-      header: 'Demo Url',
-      cell: ({ row }) => (
-        <a href={row.original.demo_url} target="_blank">
-          Open Link
-        </a>
-      ),
-    },
-    {
-      accessorKey: 'github_url',
-      header: 'Github Url',
-      cell: ({ row }) => (
-        <a href={row.original.github_url} target="_blank">
-          Open Link
-        </a>
-      ),
-    },
-    {
       accessorKey: 'tech_stack',
       header: 'Tech Stack',
       cell: ({ row }) => (
         <ul>
-          {row.original.tech_stack.map((tech) => (
+          {row.original.tech_stack?.map((tech) => (
             <li key={tech.value} className="mr-2">
               {tech.label}
             </li>
