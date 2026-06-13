@@ -1,38 +1,67 @@
-import { BentoCard, BentoGrid } from '@/components/ui/bento-grid'
+/**
+ * SETUP LOCAL INTERFACE
+ */
+
+import { BaseFolderGrid } from '@/components/base/base-folder-grid'
 import { createClient } from '@/lib/supabase/server'
-import type { Project } from '@/types'
+import { Project } from '@/types'
 
 export const revalidate = 60
-
 export default async function Page() {
   /**
    * SETUP HOOKS
    */
   const supabase = await createClient()
+  const { data: projects } = await supabase
+    .from('projects')
+    .select('*')
+    .order('date_published', { ascending: false })
 
-  const { data = [], error } = await supabase.from('projects').select('*')
-
-  if (error) return null
+  const featured = projects?.filter((p) => p.is_featured) || []
+  const notFeatured = projects?.filter((p) => !p.is_featured) || []
+  const sortedProjects = sortProjects(featured, notFeatured)
   /**
-   * RENDER SUCCESS STATE
+   * SETUP STATE
    */
-  return (
-    <section className="relative flex min-h-screen w-screen pt-20">
-      <div className="container mx-auto flex flex-1 flex-col justify-start gap-4 px-4 py-6">
-        <h1 className="font-display text-6xl leading-[0.95] lg:text-7xl"> Projects </h1>
-        <p className="mt-4 max-w-2xl text-base text-(--color-text-secondary) md:text-lg">
-          {' '}
-          A selection of products, platforms, and experiments I&apos;ve built over the years.{' '}
-        </p>
 
-        <div className="m mx-auto w-full pt-10">
-          <BentoGrid>
-            {data?.map((project: Project) => (
-              <BentoCard key={project.id} {...project} />
-            ))}
-          </BentoGrid>
-        </div>
-      </div>
-    </section>
+  /**
+   * SETUP COMPUTED
+   */
+  function sortProjects(featured: Project[], notFeatured: Project[]): Project[] {
+    const result: Project[] = []
+    let fi = 0
+    let ni = 0
+
+    for (let i = 0; fi < featured.length || ni < notFeatured.length; i++) {
+      if ((i + 1) % 4 === 0 && fi < featured.length) {
+        result.push(featured[fi++])
+      } else if (ni < notFeatured.length) {
+        result.push(notFeatured[ni++])
+      } else {
+        result.push(featured[fi++])
+      }
+    }
+
+    return result
+  }
+
+  /**
+   * SETUP FUNCTIONS
+   */
+
+  /**
+   * SETUP EFFECTS
+   */
+
+  return (
+    <div
+      className="flex flex-col justify-between gap-8 overflow-hidden bg-base-white"
+      style={{ minHeight: 'calc(100dvh - 56px)' }}
+    >
+      <section className="p-8">
+        <h1 className="text-5xl">Projects</h1>
+      </section>
+      <BaseFolderGrid projects={sortedProjects} />
+    </div>
   )
 }

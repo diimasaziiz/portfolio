@@ -1,51 +1,46 @@
-import AboutHero from '@/components/layout/about-hero'
-import Experiences from '@/components/layout/experience'
+import { DiaryInteraction } from '@/components/about/diary-interaction'
 import { createClient } from '@/lib/supabase/server'
-import { Experience } from '@/types'
+import { Experience, Technology } from '@/types'
 
-/**
- * SETUP LOCAL INTERFACE
- */
-const USER_ID = process.env.NEXT_PUBLIC_USER_ID
 export const revalidate = 60
-
 export default async function Page() {
-  /**
-   * SETUP HOOKS
-   */
   const supabase = await createClient()
 
-  const { data: profileData } = await supabase
+  // Fetch profile
+  const { data: profileData, error: profileError } = await supabase
     .from('profiles')
     .select('*')
-    .eq('id', USER_ID)
     .single()
 
-  const { data: experiences } = await supabase
+  // Fetch experiences
+  const { data: experiencesData, error: experiencesError } = await supabase
     .from('experiences')
     .select('*')
     .order('start_date', { ascending: false })
 
-  /**
-   * SETUP STATE
-   */
+  // Fetch technologies
+  const { data: technologiesData, error: technologiesError } = await supabase
+    .from('technologies')
+    .select('*')
 
-  /**
-   * SETUP COMPUTED
-   */
-
-  /**
-   * SETUP FUNCTIONS
-   */
-
-  /**
-   * SETUP EFFECTS
-   */
+  if (profileError || experiencesError || technologiesError) {
+    // In a real app, you might want to handle this better
+    console.error('Error fetching data:', profileError, experiencesError, technologiesError)
+  }
 
   return (
-    <>
-      <AboutHero profileData={profileData} />
-      <Experiences experiences={experiences as Experience[]} />
-    </>
+    <div
+      className="flex flex-col gap-8 overflow-hidden bg-base-white pb-8"
+      style={{ minHeight: 'calc(100dvh - 56px)' }}
+    >
+      <section className="p-8">
+        <h1 className="text-5xl">About me</h1>
+      </section>
+      <DiaryInteraction
+        experiences={experiencesData as Experience[]}
+        technologies={technologiesData as Technology[]}
+        profile={profileData}
+      />
+    </div>
   )
 }

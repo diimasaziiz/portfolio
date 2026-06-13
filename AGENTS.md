@@ -76,27 +76,13 @@ portfolio/
 │   ├── base/                    # Reusable base components
 │   │   ├── base-table.tsx      # TanStack Table wrapper
 │   │   ├── base-md-editor.tsx  # Markdown editor wrapper
-│   │   ├── base-marque-tech.tsx # Tech marquee animation
-│   │   ├── base-dialog-delete.tsx # Delete confirmation dialog
-│   │   ├── base-hmtl-renderer.tsx # Safe HTML renderer
 │   │   └── base-structured-data.tsx # JSON-LD structured data
 │   ├── form/                    # Form components
-│   │   ├── form-profile.tsx    # Profile form
-│   │   ├── form-project.tsx    # Project form
-│   │   ├── form-experience.tsx # Experience form
-│   │   └── form-technology.tsx # Technology form
 │   ├── icon/                    # Custom icon components
 │   │   ├── github.tsx
 │   │   ├── linkedin.tsx
 │   │   └── instagram.tsx
 │   ├── layout/                  # Layout components
-│   │   ├── navbar.tsx          # Main navigation
-│   │   ├── footer.tsx          # Footer
-│   │   ├── sidebar.tsx         # Dashboard sidebar
-│   │   ├── hero.tsx            # Homepage hero
-│   │   ├── about-hero.tsx      # About page hero
-│   │   ├── featured-project.tsx # Featured projects section
-│   │   └── experience.tsx      # Experience timeline
 │   ├── ui/                      # shadcn/ui components (38 components)
 │   │   ├── button.tsx
 │   │   ├── sidebar.tsx
@@ -107,8 +93,6 @@ portfolio/
 │   │   ├── combobox.tsx
 │   │   └── ... (31 more)
 │   ├── theme-provider.tsx      # Theme context provider
-│   ├── pre-loader.tsx          # Landing page preloader
-│   └── wrapper.tsx             # Generic wrapper component
 ├── lib/
 │   ├── supabase/
 │   │   ├── client.ts           # Browser Supabase client
@@ -500,9 +484,6 @@ import { BaseStructuredData } from '@/components/base/base-structured-data'
 
 ### Important Components
 - `components/theme-provider.tsx` - Dark mode provider
-- `components/pre-loader.tsx` - Landing page loader animation
-- `components/layout/navbar.tsx` - Main navigation
-- `components/layout/sidebar.tsx` - Dashboard sidebar
 - `components/base/base-table.tsx` - Reusable table component
 - `components/base/base-md-editor.tsx` - Markdown editor wrapper
 
@@ -660,6 +641,79 @@ const { data, error } = await supabase
   .select('*')
   .eq('column', value)
 ```
+
+# Database Schema
+
+## Table `profiles`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `full_name` | `text` |  |
+| `job_title` | `text` |  |
+| `bio` | `text` |  Nullable |
+| `full_bio` | `text` |  Nullable |
+| `cv_url` | `text` |  Nullable |
+| `email` | `text` |  Nullable |
+| `avatar_url` | `text` |  Nullable |
+| `social_links` | `jsonb` |  Nullable |
+| `created_at` | `timestamptz` |  Nullable |
+
+## Table `experiences`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `company_name` | `text` |  |
+| `company_logo_url` | `text` |  Nullable |
+| `position` | `text` |  |
+| `location` | `text` |  Nullable |
+| `start_date` | `date` |  |
+| `end_date` | `date` |  Nullable |
+| `is_current` | `bool` |  Nullable |
+| `description` | `text` |  Nullable |
+| `created_at` | `timestamptz` |  Nullable |
+| `company_url` | `text` |  Nullable |
+
+## Table `projects`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `title` | `text` |  |
+| `description` | `text` |  Nullable |
+| `content` | `text` |  Nullable |
+| `image_url` | `text` |  Nullable |
+| `is_featured` | `bool` |  Nullable |
+| `created_at` | `timestamptz` |  Nullable |
+| `date_published` | `date` |  Nullable |
+
+## Table `technologies`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `id` | `uuid` | Primary |
+| `name` | `text` |  |
+| `icon_url` | `text` |  Nullable |
+| `created_at` | `timestamptz` |  |
+
+## Table `project_technologies`
+
+### Columns
+
+| Name | Type | Constraints |
+|------|------|-------------|
+| `project_id` | `uuid` | Primary |
+| `tech_id` | `uuid` | Primary |
+
 
 ## Troubleshooting
 

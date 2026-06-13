@@ -1,33 +1,123 @@
-import Socmed from '@/components/ui/socmed'
-import { Profile, Technology } from '@/types'
+'use client'
 
-import { BaseMarqueeTech } from '../base/base-marque-tech'
+import { motion } from 'motion/react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 
-interface Props {
-  profileData: Profile
-  technologies: Technology[]
+const CELL_SIZE = 52
+const GAP = 1
+
+interface Cell {
+  id: string
+  row: number
+  col: number
 }
 
-function Hero({ profileData, technologies }: Props) {
+export function LayoutHero() {
+  const containerRef = useRef<HTMLDivElement>(null)
+
+  const [cells, setCells] = useState<Cell[]>([])
+  const [cols, setCols] = useState(0)
+
+  const recalculate = useCallback((width: number, height: number) => {
+    // 🔥 make grid square so rotation forms a perfect diamond
+    const size = Math.min(width, height)
+
+    const numCols = Math.floor((size + GAP) / (CELL_SIZE + GAP))
+    const numRows = numCols // 👈 important: square grid
+
+    if (numCols <= 0 || numRows <= 0) return
+
+    setCols(numCols)
+
+    const newCells: Cell[] = []
+    for (let r = 0; r < numRows; r++) {
+      for (let c = 0; c < numCols; c++) {
+        newCells.push({ id: `${r}-${c}`, row: r, col: c })
+      }
+    }
+
+    setCells(newCells)
+  }, [])
+
+  useEffect(() => {
+    const el = containerRef.current
+    if (!el) return
+
+    const observer = new ResizeObserver((entries) => {
+      for (const entry of entries) {
+        const { width, height } = entry.contentRect
+        recalculate(width - 150, height - 150)
+      }
+    })
+
+    observer.observe(el)
+    return () => observer.disconnect()
+  }, [recalculate])
+
   return (
-    <div className="flex min-h-screen flex-col justify-around pt-20 md:pt-40">
-      <div className="container mx-auto px-4">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
-          <div className="lg:col-span-4">
-            <span className="text-lg text-zinc-400 sm:text-xl">Hi,</span>
-            <h1 className="mt-2 mb-6 text-4xl font-bold sm:text-6xl">
-              I&apos;m {profileData?.full_name} 👋
-            </h1>
-            <p className="mb-8 text-lg leading-relaxed text-zinc-400 sm:text-xl">
-              {profileData?.bio}
-            </p>
-            <Socmed socialMedias={profileData?.social_links} />
-          </div>
-        </div>
+    <div
+      ref={containerRef}
+      style={{
+        width: '100%',
+        height: '100%',
+        overflow: 'hidden',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        position: 'relative',
+      }}
+    >
+      <div
+        style={{
+          display: 'grid',
+          gridTemplateColumns: cols > 0 ? `repeat(${cols}, ${CELL_SIZE}px)` : 'none',
+          gap: `${GAP}px`,
+          transform: 'rotate(45deg)',
+          transformOrigin: 'center center',
+          position: 'absolute',
+        }}
+      >
+        {cells.map((cell) => {
+          // Calculate distance from center for staggered animation
+          const centerRow = cols / 2
+          const centerCol = cols / 2
+          const distance = Math.sqrt(
+            Math.pow(cell.row - centerRow, 2) + Math.pow(cell.col - centerCol, 2),
+          )
+
+          return (
+            <motion.div
+              key={cell.id}
+              initial={{
+                opacity: 0,
+                scale: 0,
+              }}
+              animate={{
+                opacity: 1,
+                scale: 1,
+                backgroundColor: '#555555',
+              }}
+              whileHover={{
+                backgroundColor: '#f5f5f5',
+                transition: { duration: 0.2 },
+              }}
+              transition={{
+                opacity: { duration: 0.3, delay: distance * 0.02 },
+                scale: { duration: 0.3, delay: distance * 0.02 },
+                backgroundColor: { duration: 0.6 },
+              }}
+              style={{
+                width: CELL_SIZE,
+                height: CELL_SIZE,
+                position: 'relative',
+                overflow: 'hidden',
+                cursor: 'crosshair',
+                borderRadius: '4px',
+              }}
+            />
+          )
+        })}
       </div>
-      <BaseMarqueeTech technologies={technologies} />
     </div>
   )
 }
-
-export default Hero
