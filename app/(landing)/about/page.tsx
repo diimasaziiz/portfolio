@@ -33,7 +33,7 @@ export default async function Page() {
       className="flex flex-col gap-8 overflow-hidden bg-base-white pb-8"
       style={{ minHeight: 'calc(100dvh - 56px)' }}
     >
-      <section className="p-8">
+      <section className="p-4 md:p-8">
         <h1 className="text-5xl">About me</h1>
       </section>
       <DiaryInteraction

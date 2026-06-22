@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 
+import Avatar from '@/public/assets/avatar.webp'
 import { Profile } from '@/types'
 
 export function ProfileContent({ profile }: { profile: Profile }) {
@@ -24,22 +25,25 @@ export function ProfileContent({ profile }: { profile: Profile }) {
   return (
     <>
       {/* Profile section */}
-      <div className="grid grid-cols-[1fr_1.8fr] gap-8 border-x border-dotted border-base-background bg-white p-3">
+      <div className="grid grid-cols-1 gap-8 border-x border-dotted border-base-background bg-white p-3 md:grid-cols-[1fr_1.8fr]">
         {/* Left: name + photo */}
         <div className="flex flex-col gap-6">
           <h1 className="font-serif text-5xl leading-tight font-light md:text-5xl">
             {profile.full_name}
           </h1>
+
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            src={Avatar.src}
+            alt={profile.full_name}
+            className="h-full w-full object-cover"
+            loading="lazy"
+          />
         </div>
 
         {/* Right: bio */}
         <div className="flex flex-col justify-start gap-6 pt-2">
-          <p
-            className="text-lg leading-relaxed text-black/80"
-            style={{ fontFamily: "'Caveat', cursive" }}
-          >
-            {profile.full_bio}
-          </p>
+          <p className="text-lg leading-relaxed text-black/80">{profile.full_bio}</p>
         </div>
       </div>
 
@@ -48,10 +52,10 @@ export function ProfileContent({ profile }: { profile: Profile }) {
         {contacts.map(({ platform, url }, index) => (
           <div
             key={index}
-            className="group grid grid-cols-[1fr_1.8fr] items-center gap-8 border-dotted border-base-background p-3 transition-colors"
+            className="group grid grid-cols-1 items-center gap-2 border-dotted border-base-background p-3 transition-colors md:grid-cols-[1fr_1.8fr] md:gap-8"
             style={{ borderBottomWidth: index < contacts.length - 1 ? '1px' : 'none' }}
           >
-            <span className="font-serif text-4xl font-light text-black md:text-5xl">
+            <span className="font-serif text-xl font-light text-black md:text-4xl">
               {(platform || '').toLowerCase()}
             </span>
             <Link

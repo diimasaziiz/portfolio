@@ -6,6 +6,7 @@ import { motion } from 'framer-motion'
 import Image from 'next/image'
 import { useState } from 'react'
 
+import { useIsMobile } from '@/hooks/use-mobile'
 import { Experience } from '@/types'
 
 interface Props {
@@ -13,16 +14,27 @@ interface Props {
 }
 
 export function ExperienceContent({ experiences = [] }: Props) {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null)
+  const [hoveredIndex, setHoveredIndex] = useState<number | null>(0)
+  const isMobile = useIsMobile()
+
+  const handleHovered = (index: number | null) => {
+    if (isMobile) return
+    setHoveredIndex(index)
+  }
+
+  const handleClick = (index: number) => {
+    setHoveredIndex(index)
+  }
 
   return (
     <div className="flex flex-col border-x border-dotted border-base-background bg-muted-foreground">
-      <div className="flex items-center gap-8 border-b border-dotted border-base-background p-3 transition-colors">
+      <div className="flex items-center justify-between gap-8 border-b border-dotted border-base-background p-3 transition-colors">
         <span className="text-4xl text-black md:text-5xl">Experiences</span>
+        <span className="text-xs md:invisible">TAP TO VIEW</span>
       </div>
 
-      <div className="grid grid-cols-3">
-        <div className="border-r border-dotted border-base-background p-3">
+      <div className="grid grid-cols-1 md:grid-cols-3">
+        <div className="border-b border-dotted border-base-background p-3 md:border-r md:border-b-0">
           {hoveredIndex !== null && experiences[hoveredIndex] && (
             <motion.div
               variants={{
@@ -34,7 +46,8 @@ export function ExperienceContent({ experiences = [] }: Props) {
                 },
               }}
             >
-              <Image
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
                 src={experiences[hoveredIndex].company_logo_url}
                 alt={`logo-${experiences[hoveredIndex].company_name}`}
                 height={100}
@@ -70,8 +83,8 @@ export function ExperienceContent({ experiences = [] }: Props) {
               <div
                 key={i}
                 className="grid cursor-cell grid-cols-3 gap-3 border-b border-dotted border-base-background [&>div]:p-3 [&>p]:p-3"
-                onMouseOver={() => setHoveredIndex(i)}
-                onMouseLeave={() => setHoveredIndex(null)}
+                onMouseOver={() => handleHovered(i)}
+                onClick={() => handleClick(i)}
               >
                 <p>
                   {' '}

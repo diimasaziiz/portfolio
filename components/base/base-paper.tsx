@@ -42,7 +42,7 @@ const BasePaper = forwardRef<HTMLDivElement, Props>(function BasePaper(
   return (
     <motion.div
       ref={ref}
-      className="w-fit cursor-pointer"
+      className="w-full cursor-pointer md:w-fit"
       animate={{
         x: animateProps.x,
         y: animateProps.y,

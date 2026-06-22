@@ -12,6 +12,12 @@ function getCardColor(index: number): string {
   return pos === 0 || pos === 3 ? 'bg-primary' : 'bg-muted-foreground'
 }
 
+function getCardType(index: number, isFeatured: boolean): string {
+  const pos = index % 4
+  if (isFeatured) return 'featured'
+  return pos === 0 || pos === 3 ? 'primary' : 'secondary'
+}
+
 function formatIndex(index: number): string {
   return String(index + 1).padStart(2, '0')
 }
@@ -52,7 +58,7 @@ const FolderCard = memo(function FolderCard({
       className={isLastOdd ? 'md:col-span-2' : ''}
     >
       <Link
-        href={`/projects/${project.id}`}
+        href={`/projects/${project.id}?type=${getCardType(index, isFeatured)}&order=${index}`}
         className="relative"
         style={{ zIndex: index }}
         tabIndex={0}

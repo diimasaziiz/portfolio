@@ -21,7 +21,7 @@ function MobileMenu({ onClose }: { onClose: () => void }) {
       transition={{ duration: 0.5, ease: [0.76, 0, 0.24, 1] }}
     >
       {/* Top bar */}
-      <div className="flex items-center justify-between border-b border-dotted border-base-background px-8 py-4">
+      <div className="flex items-center justify-between border-b border-dotted border-base-background px-4 py-4 md:px-8">
         <span className="font-mono text-sm tracking-widest">DIMASABDULAZIZ</span>
         <button onClick={onClose} className="font-mono text-sm tracking-widest">
           CLOSE
@@ -131,7 +131,7 @@ export default function LayoutNavbar() {
 
   return (
     <>
-      <div className="sticky top-0 z-10 flex items-center justify-between bg-base-white px-8 py-4">
+      <div className="sticky top-0 z-10 flex items-center justify-between bg-base-white px-4 py-4 md:px-8">
         {/* Desktop nav */}
         <div className="hidden flex-1 items-center gap-4 md:flex">
           {menus.map(({ label, href }) => (

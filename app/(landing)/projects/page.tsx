@@ -1,7 +1,3 @@
-/**
- * SETUP LOCAL INTERFACE
- */
-
 import { BaseFolderGrid } from '@/components/base/base-folder-grid'
 import { createClient } from '@/lib/supabase/server'
 import { Project } from '@/types'
@@ -55,10 +51,10 @@ export default async function Page() {
 
   return (
     <div
-      className="flex flex-col justify-between gap-8 overflow-hidden bg-base-white"
+      className="flex flex-col justify-between gap-32 overflow-hidden bg-base-white"
       style={{ minHeight: 'calc(100dvh - 56px)' }}
     >
-      <section className="p-8">
+      <section className="p-4 md:p-8">
         <h1 className="text-5xl">Projects</h1>
       </section>
       <BaseFolderGrid projects={sortedProjects} />
